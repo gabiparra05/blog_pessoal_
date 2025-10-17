@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { Postagem } from './postagem/entities/postagem.entity';
-import { Tema } from './postagem/entities/tema.entity';
 import { PostagemModule } from './postagem/postagem.modules';
-import { Usuario } from './tema/entities/usuario.entity';
+import { Tema } from './tema/entities/tema.entity';
 import { TemaModule } from './tema/tema.module';
-import { UsaurioModule } from './usuario/usuario.module';
+import { Usuario } from './usuario/entities/usuario.entity';
+import { UsuarioModule } from './usuario/usuario.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -23,9 +24,9 @@ import { UsaurioModule } from './usuario/usuario.module';
     PostagemModule,
     TemaModule,
     AuthModule,
-    UsaurioModule,
+    UsuarioModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

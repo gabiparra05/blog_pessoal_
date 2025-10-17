@@ -1,15 +1,20 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Postagem } from './postagem.entity';
+import { Postagem } from '../../postagem/entities/postagem.entity';
 
 @Entity({ name: 'tb_tema' })
 export class Tema {
   @PrimaryGeneratedColumn()
+  @ApiProperty()
   id: number;
 
   @IsNotEmpty()
   @Column({ length: 255, nullable: false })
+  @ApiProperty()
   descricao: string;
+
+  @ApiProperty()
   @ManyToOne(() => Postagem, (postagem) => postagem.tema, {
     onDelete: 'CASCADE',
   })
