@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Res } from '@nestjs/common';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { ApiExcludeEndpoint } from  '@nestjs/swagger';
 
 @Controller()
 export class AppController {
