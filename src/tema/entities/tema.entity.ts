@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Postagem } from '../../postagem/entities/postagem.entity';
 
 @Entity({ name: 'tb_tema' })
@@ -15,9 +15,6 @@ export class Tema {
   descricao: string;
 
   @ApiProperty()
-  @ManyToOne(() => Postagem, (postagem) => postagem.tema, {
-    onDelete: 'CASCADE',
-  })
-  tema: Postagem[];
-  postagem: any;
+  @OneToMany(() => Postagem, (postagem) => postagem.tema)
+  postagem: Postagem[];
 }
