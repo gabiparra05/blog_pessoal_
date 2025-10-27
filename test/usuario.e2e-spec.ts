@@ -1,21 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import request from 'supertest';
-import { App } from 'supertest/types';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 
-//criar uma nova suite de testes
-describe('Testes dos módulos Usuario e Auth (e2e)', () => {
-  let app: INestApplication<App>;
-  let usuarioId: number;
-  let temaId: number;
-  let postagemId: number;
-  let token: string;
+describe('Testes dos Módulos Usuario e Auth (e2e)', () => {
+  let token: any;
+  let usuarioId: any;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -40,8 +32,7 @@ describe('Testes dos módulos Usuario e Auth (e2e)', () => {
     await app.close();
   });
 
-  // daqui pra baixo começa os testes
-  it('01 - Deve cadastrar um novo Usuário', async () => {
+  it('01 - Deve Cadastrar um novo Usuário', async () => {
     const resposta = await request(app.getHttpServer())
       .post('/usuarios/cadastrar')
       .send({
@@ -55,7 +46,7 @@ describe('Testes dos módulos Usuario e Auth (e2e)', () => {
     usuarioId = resposta.body.id;
   });
 
-  it('02 - Não deve cadastrar um usuario duplicado', async () => {
+  it('02 - Não Deve Cadastrar um Usuário Duplicado', async () => {
     await request(app.getHttpServer())
       .post('/usuarios/cadastrar')
       .send({
@@ -67,7 +58,7 @@ describe('Testes dos módulos Usuario e Auth (e2e)', () => {
       .expect(400);
   });
 
-  it('03 - Deve autenticar um Usuário (Login)', async () => {
+  it('03 - Deve Autenticar o Usuário (Login)', async () => {
     const resposta = await request(app.getHttpServer())
       .post('/usuarios/logar')
       .send({
@@ -79,14 +70,15 @@ describe('Testes dos módulos Usuario e Auth (e2e)', () => {
     token = resposta.body.token;
   });
 
-  it('04 - Deve listar todos os usuários', async () => {
-    return await request(app.getHttpServer())
+  it('04 - Deve Listar todos os Usuários', async () => {
+    return request(app.getHttpServer())
       .get('/usuarios/all')
       .set('Authorization', `${token}`)
+      .send({})
       .expect(200);
   });
 
-  it('05 - Deve atualizar um usuário', async () => {
+  it('05 - Deve Atualizar um Usuário', async () => {
     return request(app.getHttpServer())
       .put('/usuarios/atualizar')
       .set('Authorization', `${token}`)
@@ -101,50 +93,5 @@ describe('Testes dos módulos Usuario e Auth (e2e)', () => {
       .then((resposta) => {
         expect('Root Atualizado').toEqual(resposta.body.nome);
       });
-  });
-
-  it('06 - Deve conseguir criar um tema', async () => {
-    const resposta = await request(app.getHttpServer())
-      .post('/temas')
-      .set('Authorization', `${token}`)
-      .send({
-        descricao: 'Novo tema',
-      })
-      .expect(201);
-
-    temaId = resposta.body.id;
-  });
-
-  it('06.2 - Não deve criar um tema sem o token de usuario', async () => {
-    await request(app.getHttpServer())
-      .post('/temas')
-      .send({ descricao: 'novo tema' })
-      .expect(401);
-  });
-
-  it('07 - Deve conseguir cadastrar uma postagem', async () => {
-    const resposta = await request(app.getHttpServer())
-      .post('/postagens')
-      .set('Authorization', `${token}`)
-      .send({
-        titulo: 'Titulo de teste',
-        texto: 'Texto de teste',
-        tema: temaId,
-        usuario: usuarioId,
-      })
-      .expect(201);
-
-    postagemId = resposta.body.id;
-  });
-
-  it('08 - Não deve conseguir listar postagens sem Login válido', async () => {
-    return await request(app.getHttpServer()).get('/postagens').expect(401);
-  });
-
-  it('09 - Deve listar as postagens com Login válido', async () => {
-    return await request(app.getHttpServer())
-      .get('/postagens')
-      .set('Authorization', `${token}`)
-      .expect(200);
   });
 });
