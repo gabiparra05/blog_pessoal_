@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
+
 import { ProdService } from './data/services/prod.service';
 import { PostagemModule } from './postagem/postagem.Modules';
 import { TemaModule } from './tema/tema.module';
